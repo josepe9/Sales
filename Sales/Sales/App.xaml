@@ -8,6 +8,10 @@
             <!--Locator a infra le cargamos una llave llamada Locator 
             con esto hemos enganchado las viewmodels -->
             <infra:InstanceLocator x:Key="Locator"/>
+            <!-- Parameters para colocar la urlbase de la API solo en esta vista para todo-->
+            <x:String x:Key="UrlAPI">https//salesapiservices.azurewebsites.net</x:String>
+            <x:String x:Key="UrlPrefix">/api</x:String>
+            <x:String x:Key="UrlProductsController">/Products</x:String>
         </ResourceDictionary>
 	</Application.Resources>
 </Application>

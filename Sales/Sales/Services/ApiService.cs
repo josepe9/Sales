@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
     using Common.Models;
     using Newtonsoft.Json;
+    using Plugin.Connectivity;
+    using Sales.Helpers;
 
     /* los using colocarlos denbtro de los namespaces
      * colocar primero los system
@@ -13,6 +15,33 @@
      */
     public class ApiService
     {
+        public async Task<Response> CheckConnection()
+        {
+            if (!CrossConnectivity.Current.IsConnected)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = Languages.TurnOnInternet,
+                };
+            }
+
+            var isReachable = await CrossConnectivity.Current.IsRemoteReachable("google.com");
+            if (!isReachable)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = Languages.NoInternet,
+                };
+            }
+
+            return new Response
+            {
+                IsSuccess = true,
+            };
+        }
+
         /*devolver una lista de T que asume las veces de cualquier modelo
          * debe consumir el servicio de la api desde la url dada
          * que se divide así: urlBase = https://salesapiservices.azurewebsites.net
@@ -31,6 +60,9 @@
                  */
                 var client = new HttpClient();
                 client.BaseAddress = new Uri(urlBase);
+
+                //es para concatenar dos cadenas, 
+                //tambien se puede hacer con string.format({0}{1},prefix,controller)
                 var url = $"{prefix}{controller}";
                 var response = await client.GetAsync(url);
                 //leer tipo string json
